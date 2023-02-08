@@ -12,9 +12,11 @@ Requirements:
     SEC (https://simple-evcorr.github.io/) installed
 
 SEC monitors log files like so:
+~~~
     /opt/bin/sec --conf=/etc/sec.conf --input=/var/log/messages --detach --pid=/run/sec.pid
-
+~~~
 For dropping ssh brute force attempts:
+~~~
     sec.conf:
         type=Single
         ptype=RegExp
@@ -33,7 +35,7 @@ For dropping ssh brute force attempts:
         IPTABLES=/usr/sbin/iptables 
         EXTIF="<your_network_interface>"
         sudo $IPTABLES -I INPUT -i $EXTIF -m comment --comment "SSH Block" -s $1 -j DROP 
-
+~~~
     example:
         Feb  8 10:37:23 sshd[2478723]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=192.227.194.176  user=root
         Feb  8 10:37:24 sshd[2478723]: Failed password for root from 192.227.194.176 port 42462 ssh2
@@ -41,6 +43,7 @@ For dropping ssh brute force attempts:
 
 
 For dropping smtp auth brute force attempts:
+~~~
     sec.conf:
         type=SingleWithThreshold
         ptype=RegExp
@@ -62,9 +65,10 @@ For dropping smtp auth brute force attempts:
         Feb  8 15:08:01 postfix/smtpd[2522254]: lost connection after AUTH from unknown[59.60.121.38]
         Feb  8 15:08:01 postfix/smtpd[2522254]: disconnect from unknown[59.60.121.38] ehlo=2 starttls=1 auth=0/1 commands=3/4
         Feb  8 15:08:01 sudo:     root : TTY=unknown ; PWD=/ ; USER=root ; COMMAND=/usr/sbin/iptables -I INPUT -i <your_network_interface> -m comment --comment Email Block -s 59.60.121.38 -p tcp --dport 25 -j DROP
-
+~~~
 
 For dropping quick, large TCP portscans:
+~~~
     sec.conf:
         type=SingleWithThreshold
         ptype=RegExp
@@ -103,3 +107,4 @@ For dropping quick, large TCP portscans:
         Feb  8 05:54:15 kernel: [949963.015638] NEW IN=<your_network_interface> OUT= MAC=<MAC> SRC=35.208.135.43 DST=<your_external_IP> LEN=60 TOS=0x08 PREC=0x00 TTL=121 ID=41023 DF PROTO=TCP SPT=62846 DPT=80 WINDOW=65320 RES=0x00 SYN URGP=0 
         Feb  8 05:54:15 kernel: [949963.019301] NEW IN=<your_network_interface> OUT= MAC=<MAC> SRC=35.208.135.43 DST=<your_external_IP> LEN=60 TOS=0x08 PREC=0x00 TTL=119 ID=54160 DF PROTO=TCP SPT=62848 DPT=80 WINDOW=65320 RES=0x00 SYN URGP=0 
         Feb  8 05:54:15 sudo:     root : TTY=unknown ; PWD=/ ; USER=root ; COMMAND=/usr/sbin/iptables -I INPUT -i <your_network_interface> -m comment --comment SYN Block -s 35.208.135.43 -j DROP
+~~~
